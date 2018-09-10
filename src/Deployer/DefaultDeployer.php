@@ -372,7 +372,9 @@ abstract class DefaultDeployer extends AbstractDeployer
 
         $this->log('<h2>Warming up cache</>');
         $this->runRemote(sprintf('{{ console_bin }} cache:warmup --no-debug --env=%s', $this->getConfig(Option::symfonyEnvironment)));
-        $this->runRemote('chmod -R g+w {{ cache_dir }}');
+        if ($this->getConfig(Option::permissionMethod) === 'chmod') {
+            $this->runRemote('chmod -R g+w {{ cache_dir }}');
+        }
     }
 
     private function doClearControllers(): void
